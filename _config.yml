@@ -1,0 +1,4 @@
+name: d3 examples
+pygments: true
+markdown: rdiscount
+baseurl: /d3-examples

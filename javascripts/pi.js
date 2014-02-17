@@ -1,0 +1,69 @@
+
+var pi = '3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482133936072602491412737245870066063155881748815209209628292540917153643678925903600113305305488204665213841469519415116094330572703657595919530921861173819326117931051185480744623799627495673518857527248912279381830119491298336733624406566430860213949463952247371907021798609437027705392171762931767523846748184676694051320005681271452635608277857713427577896091736371787214684409012249534301465495853710507922796892589235420199561121290219608640344181598136297747713099605187072113499999983729780499510597317328160963185950244594553469083026425223082533446850352619311881710100031378387528865875332083814206171776691473035982534904287554687311595628638823537875937519577818577805321712268066130019278766111959092164201989';
+/* global d3, _*/
+
+var margin = {
+    top: 20,
+    right: 20,
+    bottom: 30,
+    left: 200
+},
+width = 10000 - margin.left - margin.right,
+height = 500 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+.range([0, width]);
+
+var y = d3.scale.linear()
+.range([height, 0]);
+
+var xAxis = d3.svg.axis()
+.scale(x)
+.orient("bottom");
+
+var yAxis = d3.svg.axis()
+.scale(y)
+.orient("left");
+
+var line = d3.svg.line()
+.interpolate('basic')
+.x(function(d) {
+    return x(d.index);
+})
+.y(function(d) {
+    return y(d.value);
+});
+
+var svg = d3.select("#container").append("svg")
+.attr("width", width + margin.left + margin.right)
+.attr("height", height + margin.top + margin.bottom)
+.append("g")
+.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var dataStr = pi.substring(2, pi.length);
+var dataArr = dataStr.split('');
+var data = [];
+_.each(dataArr, function(v, i) {
+    var a = {index: i, value: v};
+    data.push(a);
+});
+
+x.domain([0, 1000]);
+y.domain([0, 9]);
+
+
+if(!d3.select('.axis')[0][0]) {
+    svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+    svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
+}
+
+svg.append("path")
+.datum(data)
+.attr("class", "send")
+.attr("d", line);
